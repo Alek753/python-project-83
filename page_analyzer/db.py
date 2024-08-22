@@ -1,0 +1,23 @@
+import os
+from psycopg2 import connect, extras
+from dotenv import load_dotenv
+
+
+load_dotenv()
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+
+def db_connect():
+    return psycopg2.connect(DATABASE_URL)
+
+def add_url(url):
+    insert = """INSERT INTO urls (name)
+                VALUES (%s)
+                RETURNING id;"""
+    with db_connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(insert, (url,))
+            id = cur.fetchone()[0]
+    conn.commit()
+    conn.close()
+    return id
