@@ -17,7 +17,7 @@ def index():
 def validate(url):
     if not url:
         return 'Заполните это поле'
-    if not validate.url(url):
+    if not validators.url(url):
         return 'Некорректный URL'
     return 0
 
@@ -29,10 +29,8 @@ def add_url():
     if errors:
         flash(errors, 'error')
         return render_template('index.html', url=url), 422
-    
 
 
 @app.post('/urls/<id>/checks')
 def check_url(id):
     pass
- 
