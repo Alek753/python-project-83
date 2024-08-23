@@ -12,13 +12,25 @@ def db_connect():
 
 
 def add_url(url):
-    insert = """INSERT INTO urls (name)
+    query = """INSERT INTO urls (name)
                 VALUES (%s)
                 RETURNING id;"""
     with db_connect() as conn:
         with conn.cursor() as cur:
-            cur.execute(insert, (url,))
-            id = cur.fetchone()[0]
+            cur.execute(query, (url,))
+            id = cur.fetchone()
     conn.commit()
     conn.close()
     return id
+
+
+def find_url(url):
+    query = """SELECT name FROM urls
+                WHERE name = %s;"""
+    with db_connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, (url,))
+            name = cur.fetchone()
+    conn.commit()
+    conn.close()
+    return name
