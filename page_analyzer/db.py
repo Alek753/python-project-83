@@ -1,5 +1,5 @@
 import os
-from psycopg2 import connect, extras
+from psycopg2 import connect
 from dotenv import load_dotenv
 
 
@@ -8,7 +8,8 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 
 
 def db_connect():
-    return psycopg2.connect(DATABASE_URL)
+    return connect(DATABASE_URL)
+
 
 def add_url(url):
     insert = """INSERT INTO urls (name)
