@@ -24,12 +24,12 @@ def add_url(url):
     return id
 
 
-def find_url(url):
+def find_url(id):
     query = """SELECT name FROM urls
-                WHERE name = %s;"""
+                WHERE id = %s;"""
     with db_connect() as conn:
         with conn.cursor() as cur:
-            cur.execute(query, (url,))
+            cur.execute(query, (id,))
             name = cur.fetchone()
     conn.commit()
     conn.close()

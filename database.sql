@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS urls (
     );
 
 
-CREATE TABLE IF NOT EXIST url_checks (
+CREATE TABLE IF NOT EXISTS url_checks (
     id SERIAL PRIMARY KEY,
     url_id INT NOT NULL REFERENCES urlS(id),
     status_code INT,

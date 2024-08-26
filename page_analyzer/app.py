@@ -3,6 +3,8 @@ from flask import Flask, render_template, flash, request, redirect, url_for
 from dotenv import load_dotenv
 import validators
 from urllib.parse import urlparse
+import requests
+from page_analyzer import db
 
 
 load_dotenv()
@@ -20,7 +22,7 @@ def validate(url):
         return 'Заполните это поле'
     if not validators.url(url):
         return 'Некорректный URL'
-    return 0
+    return None
 
 
 def normalize(url):
@@ -32,10 +34,11 @@ def normalize(url):
 def add_url():
     url = request.form['url']
     errors = validate(url)
+    print(errors)
     if errors:
         flash(errors, 'error')
         return render_template('index.html', url=url), 422
-    id = add_url(normalize(url))
+    id = db.add_url(normalize(url))
     flash('Страница успешно добавлена', 'success')
     return redirect(url_for('url_page', id=id))
 
@@ -47,4 +50,11 @@ def url_page(id):
 
 @app.post('/urls/<id>/checks')
 def check_url(id):
-    pass
+    try:
+        response = requests.get(db.find_url(id))
+        response.raise_for_status()
+    except requests.RequestException:
+        flash('Произошла ошибка при проверке', 'danger')
+    """ some process for url """
+    flash('Страница успешно проверена', 'success')
+    return redirect(url_for('url_page', id=id))
