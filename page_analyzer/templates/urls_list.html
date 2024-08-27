@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1>Сайты</h1>
+<table class="table table-bordered" data-test="urls">
+    <tr>
+        <td>ID</td>
+        <td>{{ urls['id'] }}</td>
+    </tr>
+    <tr>
+        <td>Имя</td>
+        <td>{{ urls['name'] }}</td>
+    </tr>
+    <tr>
+        <td>Последняя проверка</td>
+        <td>{{ urls['created_at'] }}</td>
+    </tr>
+    <tr>
+        <td>Код ответа</td>
+        <td>{{ urls['status_code'] }}</td>
+    </tr>
+</table>
+{% endblock %}

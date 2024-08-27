@@ -43,9 +43,18 @@ def add_url():
     return redirect(url_for('url_page', id=id))
 
 
-@app.route('/urls/<id>')
+@app.get('/urls')
+def show_urls_list():
+    urls = db.get_checked_urls()
+    return render_template('urls_list.html', urls=urls)
+
+
+@app.route('/urls/<int:id>')
 def url_page(id):
-    pass
+    url_info = db.get_url(id)
+    print(id)
+    checked_url = db.get_checked_url(id)
+    return render_template('check_url.html', url=url_info, checks=checked_url)
 
 
 @app.post('/urls/<id>/checks')
