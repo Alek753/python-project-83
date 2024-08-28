@@ -5,6 +5,7 @@ import validators
 from urllib.parse import urlparse
 import requests
 from page_analyzer import db
+from page_analyzer import html_analyzer
 
 
 load_dotenv()
@@ -34,36 +35,46 @@ def normalize(url):
 def add_url():
     url = request.form['url']
     errors = validate(url)
-    print(errors)
     if errors:
         flash(errors, 'error')
         return render_template('index.html', url=url), 422
-    id = db.add_url(normalize(url))
-    flash('Страница успешно добавлена', 'success')
+    norm_url = normalize(url)
+    url_data = db.get_url(norm_url)
+    if url_data:
+        flash('Страница уже существует', 'warning')
+        id = url_data['id']
+    else:
+        id = db.add_url(norm_url)
+        print(id)
+        flash('Страница успешно добавлена', 'success')
     return redirect(url_for('url_page', id=id))
 
 
 @app.get('/urls')
 def show_urls_list():
     urls = db.get_checked_urls()
+    print(urls)
     return render_template('urls_list.html', urls=urls)
 
 
 @app.route('/urls/<int:id>')
 def url_page(id):
     url_info = db.get_url(id)
-    print(id)
     checked_url = db.get_checked_url(id)
     return render_template('check_url.html', url=url_info, checks=checked_url)
 
 
-@app.post('/urls/<id>/checks')
+@app.post('/urls/<int:id>/checks')
 def check_url(id):
+    url = db.get_url(id)
     try:
-        response = requests.get(db.find_url(id))
+        response = requests.get(url['name'])
         response.raise_for_status()
     except requests.RequestException:
         flash('Произошла ошибка при проверке', 'danger')
-    """ some process for url """
-    flash('Страница успешно проверена', 'success')
-    return redirect(url_for('url_page', id=id))
+    else:
+        html_data = html_analyzer.analyze_page(response)
+        db.add_checked_url(html_data)
+        flash('Страница успешно проверена', 'success')
+    finally:
+        return redirect(url_for('url_page', id=id))

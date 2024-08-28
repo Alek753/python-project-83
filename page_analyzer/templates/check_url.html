@@ -18,15 +18,27 @@
 </table>
 <h2>Проверки</h2>
 <table class="table table-bordered" data-test="checks">
-<thead>
-    <tr>
-        <th>ID</th>
-        <th>Код ответа</th>
-        <th>h1</th>
-        <th>Title</th>
-        <th>description</th>
-        <th>Дата созданиия</th>
-    </tr>
-</thead>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Код ответа</th>
+            <th>h1</th>
+            <th>Title</th>
+            <th>description</th>
+            <th>Дата созданиия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for check in check %}
+            <tr>
+                <td>check['id']</td>
+                <td>check['status_code']</td>
+                <td>check['h1']</td>
+                <td>check['title']</td>
+                <td>check['decription']</td>
+                <td>check['created_at']</td>
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
 {% endblock %}

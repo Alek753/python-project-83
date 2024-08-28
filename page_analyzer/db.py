@@ -24,28 +24,31 @@ def add_url(url):
     return id
 
 
-def find_url(id):
-    query = """SELECT name FROM urls
-                WHERE id = %s;"""
+def add_checked_url(url_data):
+    query = """INSER INTO url_checks
+                (url_id, status_code, h1, title, description)
+                VALUES (%s)"""
     with db_connect() as conn:
         with conn.cursor() as cur:
-            cur.execute(query, (id,))
-            name = cur.fetchone()
+            cur.execute(query, (url_data,))
     conn.commit()
     conn.close()
-    return name
 
 
-def get_url(id):
-    query = """SELECT * FROM urls
-                WHERE id = %s;"""
+def get_url(attr):
+    if isinstance(attr, str):
+        search_for = 'name'
+    else:
+        search_for = 'id'
+    query = f"""SELECT * FROM urls
+                WHERE {search_for} = %s;"""
     with db_connect() as conn:
         with conn.cursor(cursor_factory=extras.RealDictCursor) as cur:
-            cur.execute(query, (id,))
-            url_info = cur.fetchone()
+            cur.execute(query, (attr,))
+            url_data = cur.fetchone()
     conn.commit()
     conn.close()
-    return url_info
+    return url_data
 
 
 def get_checked_url(id):
@@ -53,4 +56,19 @@ def get_checked_url(id):
 
 
 def get_checked_urls():
-    pass
+    query = """SELECT name,
+                        urls.id AS id,
+                        name,
+                        status_code,
+                        url_checks.created_at
+                FROM urls
+                LEFT JOIN url_checks ON
+                    urls.id = url_checks.url_id
+                ORDER BY id DESC"""
+    with db_connect() as conn:
+        with conn.cursor(cursor_factory=extras.RealDictCursor) as cur:
+            cur.execute(query)
+            checked_urls = cur.fetchall()
+    conn.commit()
+    conn.close()
+    return checked_urls
