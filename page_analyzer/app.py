@@ -45,7 +45,6 @@ def add_url():
         id = url_data['id']
     else:
         id = db.add_url(norm_url)
-        print(id)
         flash('Страница успешно добавлена', 'success')
     return redirect(url_for('url_page', id=id))
 
@@ -53,15 +52,14 @@ def add_url():
 @app.get('/urls')
 def show_urls_list():
     urls = db.get_checked_urls()
-    print(urls)
     return render_template('urls_list.html', urls=urls)
 
 
 @app.route('/urls/<int:id>')
 def url_page(id):
     url_info = db.get_url(id)
-    checked_url = db.get_checked_url(id)
-    return render_template('check_url.html', url=url_info, checks=checked_url)
+    url_checks = db.get_url_checks(id)
+    return render_template('check_url.html', url=url_info, checks=url_checks)
 
 
 @app.post('/urls/<int:id>/checks')
@@ -74,7 +72,12 @@ def check_url(id):
         flash('Произошла ошибка при проверке', 'danger')
     else:
         html_data = html_analyzer.analyze_page(response)
-        db.add_checked_url(html_data)
+#        print('html_data = ', html_data)
+        full_data = {'url_id': id}
+        full_data.update(html_data)
+#        print('append = ', full_data)
+        db.add_checked_url(full_data)
+        print('full_data = ', full_data)
         flash('Страница успешно проверена', 'success')
     finally:
         return redirect(url_for('url_page', id=id))
