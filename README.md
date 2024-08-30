@@ -1,13 +1,15 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/Alek753/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Alek753/python-project-83/actions)
-
+[![Maintainability](https://api.codeclimate.com/v1/badges/6082f2af7b2da90006be/maintainability)](https://codeclimate.com/github/Alek753/python-project-83/maintainability)
 [![CI](https://github.com/Alek753/python-project-83/actions/workflows/lint_flake8.yml/badge.svg)](https://github.com/Alek753/python-project-83/actions/workflows/lint_flake8.yml)
 
-Приложение на Render.com
+
 
 # Проект 3: Анализатор страниц (Page Analyzer)
 ## Описание
-Анализатор страниц (Page Analyzer) – это приложение на базе фреймворка Flask, которое анализирует заданные страницы на SEO-пригодность
+Анализатор страниц (Page Analyzer) – это приложение на базе фреймворка Flask, которое анализирует заданные страницы на SEO-пригодность.
+
+### [Приложение на Render.com](https://python-project-83-hvib.onrender.com)
 
 ## Системные требования
 * Python 3.9
@@ -47,13 +49,12 @@
    make instal
    ```
 
-8. Чтобы запустить приложение на "тестовом" сервере:
+8. Чтобы запустить приложение в режиме разработки (на flask):
    ```sh
    make dev
    ```
 
-5. Запустите приложение на сервере:
+5. Чтобы запустить приложение в продакшене (на ginicorn):
    ```sh
    make start
    ```
----
