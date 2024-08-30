@@ -25,7 +25,6 @@ def add_url(url):
 
 
 def add_checked_url(url_data):
-    print(list(url_data.values()))
     query = """INSERT INTO url_checks
                 (url_id, status_code, h1, title, description)
                 VALUES (%s, %s, %s, %s, %s);"""
@@ -34,7 +33,7 @@ def add_checked_url(url_data):
             try:
                 cur.execute(query, list(url_data.values()))
             except Exception as error:
-                print(error, '/n', type(error))
+                print(error, '\n', type(error))
     conn.commit()
     conn.close()
 
@@ -57,7 +56,8 @@ def get_url(attr):
 
 def get_url_checks(id):
     query = """SELECT * FROM url_checks
-                WHERE url_id = %s;"""
+                WHERE url_id = %s
+                ORDER BY id DESC;"""
     with db_connect() as conn:
         with conn.cursor(cursor_factory=extras.RealDictCursor) as cur:
             cur.execute(query, (id,))
@@ -68,8 +68,9 @@ def get_url_checks(id):
 
 
 def get_checked_urls():
-    query = """SELECT name,
+    query = """SELECT DISTINCT ON (urls.id)
                         urls.id AS id,
+                        name,
                         name,
                         status_code,
                         url_checks.created_at

@@ -1,9 +1,9 @@
 import os
+import validators
+import requests
 from flask import Flask, render_template, flash, request, redirect, url_for
 from dotenv import load_dotenv
-import validators
 from urllib.parse import urlparse
-import requests
 from page_analyzer import db
 from page_analyzer import html_analyzer
 
@@ -71,13 +71,9 @@ def check_url(id):
     except requests.RequestException:
         flash('Произошла ошибка при проверке', 'danger')
     else:
-        html_data = html_analyzer.analyze_page(response)
-#        print('html_data = ', html_data)
-        full_data = {'url_id': id}
-        full_data.update(html_data)
-#        print('append = ', full_data)
-        db.add_checked_url(full_data)
-        print('full_data = ', full_data)
+        html_data = {'url_id': id}
+        html_data.update(html_analyzer.analyze_page(response))
+        db.add_checked_url(html_data)
         flash('Страница успешно проверена', 'success')
     finally:
         return redirect(url_for('url_page', id=id))

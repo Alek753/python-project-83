@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Сайт {{ url["name"] }}</h1>
-<table class="table table-bordered" data-test="url">
+<table class="table table-bordered text-nowrap" data-test="url">
     <tr>
         <td>ID</td>
         <td>{{ url['id'] }}</td>
@@ -20,7 +20,7 @@
 <form action="{{ url_for('check_url', id=url['id']) }}" method="post">
     <input type="submit" class="btn btn-primary btn-lg ms-3 px-5 text-uppercase mx-3" value="Запустить проверку">
 </form>
-<table class="table table-bordered mt-3" data-test="checks">
+<table class="table table-bordered table-hover mt-2" data-test="checks">
     <thead>
         <tr>
             <th>ID</th>
@@ -38,7 +38,7 @@
                 <td>{{ check['status_code'] }}</td>
                 <td>{{ check['h1'] }}</td>
                 <td>{{ check['title'] }}</td>
-                <td>{{ check['decription'] }}</td>
+                <td>{{ check['description'] }}</td>
                 <td>{{ check['created_at'] }}</td>
             </tr>
         {% endfor %}

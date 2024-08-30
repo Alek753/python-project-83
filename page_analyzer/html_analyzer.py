@@ -9,4 +9,4 @@ def analyze_page(response):
     return {'status_code': response.status_code,
             'h1': h1,
             'title': title,
-            'decription': description.get('content')[:255] if description else ''}
+            'description': description.get('content') if description else ''}
