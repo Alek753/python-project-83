@@ -69,6 +69,7 @@ def check_url(id):
         response = requests.get(url['name'])
         response.raise_for_status()
     except requests.RequestException:
+        print(response)
         flash('Произошла ошибка при проверке', 'danger')
     else:
         html_data = {'url_id': id}
