@@ -38,16 +38,24 @@ def add_checked_url(url_data):
     conn.close()
 
 
-def get_url(attr):
-    if isinstance(attr, str):
-        search_for = 'name'
-    else:
-        search_for = 'id'
-    query = f"""SELECT * FROM urls
-                WHERE {search_for} = %s;"""
+def get_url_by_name(name):
+    query = """SELECT * FROM urls
+                WHERE name = %s;"""
     with db_connect() as conn:
         with conn.cursor(cursor_factory=extras.RealDictCursor) as cur:
-            cur.execute(query, (attr,))
+            cur.execute(query, (name,))
+            url_data = cur.fetchone()
+    conn.commit()
+    conn.close()
+    return url_data
+
+
+def get_url_by_id(id):
+    query = """SELECT * FROM urls
+                WHERE id = %s;"""
+    with db_connect() as conn:
+        with conn.cursor(cursor_factory=extras.RealDictCursor) as cur:
+            cur.execute(query, (id,))
             url_data = cur.fetchone()
     conn.commit()
     conn.close()
