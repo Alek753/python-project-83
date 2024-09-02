@@ -1,11 +1,10 @@
 import os
-import validators
 import requests
 from flask import Flask, render_template, flash, request, redirect, url_for
 from dotenv import load_dotenv
-from urllib.parse import urlparse
 from page_analyzer import db
 from page_analyzer import html_analyzer
+from page_analyzer import url_utils
 
 
 load_dotenv()
@@ -18,27 +17,14 @@ def index():
     return render_template('index.html')
 
 
-def validate(url):
-    if not url:
-        return 'Заполните это поле'
-    if not validators.url(url):
-        return 'Некорректный URL'
-    return None
-
-
-def normalize(url):
-    parsed_url = urlparse(url)
-    return f'{parsed_url.scheme}://{parsed_url.netloc}'
-
-
 @app.post('/urls')
 def add_url():
     url = request.form['url']
-    errors = validate(url)
+    errors = url_utils.validate(url)
     if errors:
         flash(errors, 'error')
         return render_template('index.html', url=url), 422
-    norm_url = normalize(url)
+    norm_url = url_utils.normalize(url)
     url_data = db.get_url(norm_url)
     if url_data:
         flash('Страница уже существует', 'warning')
