@@ -38,28 +38,26 @@ def add_checked_url(url_data):
     conn.close()
 
 
-def get_url_by_name(name):
-    query = """SELECT * FROM urls
-                WHERE name = %s;"""
+def exec_get_url(query, attr):
     with db_connect() as conn:
         with conn.cursor(cursor_factory=extras.RealDictCursor) as cur:
-            cur.execute(query, (name,))
+            cur.execute(query, (attr,))
             url_data = cur.fetchone()
     conn.commit()
     conn.close()
     return url_data
+
+
+def get_url_by_name(name):
+    query = """SELECT * FROM urls
+                WHERE name = %s;"""
+    return exec_get_url(query, name)
 
 
 def get_url_by_id(id):
     query = """SELECT * FROM urls
                 WHERE id = %s;"""
-    with db_connect() as conn:
-        with conn.cursor(cursor_factory=extras.RealDictCursor) as cur:
-            cur.execute(query, (id,))
-            url_data = cur.fetchone()
-    conn.commit()
-    conn.close()
-    return url_data
+    return exec_get_url(query, id)
 
 
 def get_url_checks(id):
