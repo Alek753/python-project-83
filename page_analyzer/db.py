@@ -39,21 +39,22 @@ def add_checked_url(cur, url_data):
 
 
 @set_connection(extras.RealDictCursor)
-def get_url_by_name(cur, name):
+def get_url_data(cur, attr, query):
+    cur.execute(query, (attr,))
+    url_data = cur.fetchone()
+    return url_data
+
+
+def get_url_by_name(name):
     query = """SELECT * FROM urls
                 WHERE name = %s;"""
-    cur.execute(query, (name,))
-    url_data = cur.fetchone()
-    return url_data
+    return get_url_data(name, query)
 
 
-@set_connection(extras.RealDictCursor)
-def get_url_by_id(cur, id):
+def get_url_by_id(id):
     query = """SELECT * FROM urls
                 WHERE id = %s;"""
-    cur.execute(query, (id,))
-    url_data = cur.fetchone()
-    return url_data
+    return get_url_data(id, query)
 
 
 @set_connection(extras.RealDictCursor)
